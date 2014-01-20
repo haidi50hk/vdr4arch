@@ -1,8 +1,8 @@
 # Maintainer: Christopher Reimer <vdr4arch[at]creimer[dot]net>
 pkgname=vdr-dvbapi
-pkgver=1.0.5_33_ge5e59ed
+pkgver=1.0.5_42_gcbf0a6f
 epoch=1
-_gitver=e5e59ed61176d60891fb8e68f773b5b9eed941f4
+_gitver=cbf0a6f08618f893355792b9185f89a70591d3e0
 _vdrapi=2.1.3
 pkgrel=1
 pkgdesc="A bridge between VDR and OScam."
