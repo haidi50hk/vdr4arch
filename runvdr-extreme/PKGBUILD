@@ -1,7 +1,7 @@
 # Maintainer: Christopher Reimer <vdr4arch[at]creimer[dot]net>
 pkgname=runvdr-extreme
 pkgver=0.5.0
-pkgrel=2
+pkgrel=3
 pkgdesc="Runvdr script, just like the runvdr script included in the VDR distribution"
 url="http://www.udo-richter.de/vdr/scripts.html"
 arch=('any')
@@ -20,7 +20,7 @@ md5sums=('e993264e0ec439118b47689a27111128'
          '32dcab4ce46f8164977ab3abdeccec57'
          'a3bf66614daa536284e517855d2c9dab'
          '5fe146509c84500bbf9b1be97b1d5a7d'
-         'a6827951cfd3642fa9df57f128bc58db')
+         'a0f95ecd631f9d3229d393beab41be26')
 
 package() {
   install -Dm644 60-create-dvb-device-units.rules "$pkgdir/usr/lib/udev/rules.d/60-create-dvb-device-units.rules"

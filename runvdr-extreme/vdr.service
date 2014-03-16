@@ -4,9 +4,11 @@ After=oscam.service
 After=sundtek.service
 
 [Service]
+Type=notify
 ExecStart=/usr/bin/runvdr
 KillMode=process
 ExecStopPost=/usr/lib/vdr/bin/gen-sddropin
+NotifyAccess=all
 
 [Install]
 WantedBy=multi-user.target
