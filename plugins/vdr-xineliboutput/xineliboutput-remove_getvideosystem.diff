@@ -1,0 +1,29 @@
+diff --git a/device.c b/device.c
+index 6b977e1..972c0cf 100644
+--- a/device.c
++++ b/device.c
+@@ -1625,12 +1625,6 @@ void cXinelibDevice::SetVideoDisplayFormat(eVideoDisplayFormat VideoDisplayForma
+ #endif
+ }
+ 
+-eVideoSystem cXinelibDevice::GetVideoSystem(void)
+-{
+-  TRACEF("cXinelibDevice::GetVideoSystem");
+-  return cDevice::GetVideoSystem();
+-}
+-
+ #if VDRVERSNUM >= 10708
+ void cXinelibDevice::GetVideoSize(int &Width, int &Height, double &VideoAspect)
+ {
+diff --git a/device.h b/device.h
+index 18ae473..9c34067 100644
+--- a/device.h
++++ b/device.h
+@@ -121,7 +121,6 @@ class cXinelibDevice : public cDevice
+   public:
+     virtual void SetVideoDisplayFormat(eVideoDisplayFormat VideoDisplayFormat);
+     virtual void SetVideoFormat(bool VideoFormat16_9);
+-    virtual eVideoSystem GetVideoSystem(void);
+ 
+     struct video_size_s *m_VideoSize;
+     struct ts_state_s   *m_tssVideoSize;

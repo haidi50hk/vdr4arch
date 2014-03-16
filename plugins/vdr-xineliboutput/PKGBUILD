@@ -2,8 +2,8 @@
 pkgname=vdr-xineliboutput
 pkgver=1.1.0
 _gitver=32bde0a1eb887de10e460fe12c32251b6a7f1114
-_vdrapi=2.1.5
-pkgrel=7
+_vdrapi=2.1.6
+pkgrel=8
 pkgdesc="X11 and Linux framebuffer front-end for VDR"
 url="http://www.sourceforge.net/projects/xineliboutput"
 arch=('x86_64' 'i686')
@@ -14,9 +14,11 @@ optdepends=('nvidia: Required for VDPAU decoding'
 makedepends=('git')
 _plugname=$(echo $pkgname | sed 's/vdr-//g')
 source=("git://projects.vdr-developer.org/$_plugname.git#commit=$_gitver"
-        'xineliboutput-vdr2.1.2compat.diff')
+        'xineliboutput-vdr2.1.2compat.diff'
+        'xineliboutput-remove_getvideosystem.diff')
 md5sums=('SKIP'
-         'd313b50c576ab17dfb2a08d50981bec8')
+         'd313b50c576ab17dfb2a08d50981bec8'
+         '2d38f889c95782bfea7f6282fc519230')
 
 pkgver() {
   cd "${srcdir}/${_plugname}"
@@ -26,6 +28,7 @@ pkgver() {
 prepare() {
   cd "${srcdir}/${_plugname}"
   patch -p1 -i "$srcdir/xineliboutput-vdr2.1.2compat.diff"
+  patch -p1 -i "$srcdir/xineliboutput-remove_getvideosystem.diff"
 }
 
 package() {
