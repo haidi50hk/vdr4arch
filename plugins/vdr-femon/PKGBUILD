@@ -12,7 +12,7 @@ _plugname=$(echo $pkgname | sed 's/vdr-//g')
 source=("http://www.saunalahti.fi/~rahrenbe/vdr/femon/files/$pkgname-$pkgver.tgz"
         "femon.neu3.SNR_STR.diff.bz2::http://www.vdr-portal.de/index.php?page=Attachment&attachmentID=34539")
 backup=("etc/vdr/conf.avail/50-$_plugname.conf")
-md5sums=('d9f7c8348314ea24181f387998e43f18'
+md5sums=('3942a6e36b5e8819ef6ed1427cc99afa'
          '583e20cd6c326a9b55589d97f8efde3e')
 
 prepare() {
