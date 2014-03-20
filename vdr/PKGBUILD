@@ -61,8 +61,6 @@ prepare() {
 
   sed -i 's/NULL, 0, true/NULL, 0, OpenSubMenus/g' "$srcdir/MainMenuHooks-v1_0_2.diff"
   patch -p1 -i "$srcdir/MainMenuHooks-v1_0_2.diff"
-  sed -i 's/cVideoDirectory::SetName(VideoDirectory);/SetVideoDirectory(VideoDirectory);/g' \
-    $srcdir/vdr-2.1.6-conf.d-v4.diff
   patch -p1 -i "$srcdir/vdr-2.1.6-conf.d-v4.diff"
 
   sed -i '/define DEPRECATED_VIDEOSYSTEM/d' device.h
