@@ -18,7 +18,6 @@ source=("http://www.saunalahti.fi/~rahrenbe/vdr/$_plugname/files/$pkgname-$pkgve
         'https://github.com/yavdr/yavdr-base/raw/stable-0.5/etc/vdr/plugins/iptv/vlcinput/THE_VOICE.conf'
         'https://github.com/yavdr/yavdr-base/raw/stable-0.5/etc/vdr/plugins/iptv/vlcinput/zdf-iptv.conf'
         'https://github.com/yavdr/yavdr-base/raw/stable-0.5/etc/vdr/plugins/iptv/vlcinput/zdf_info-iptv.conf'
-        'https://github.com/yavdr/yavdr-base/raw/stable-0.5/etc/vdr/plugins/iptv/vlcinput/zdf_kultur-iptv.conf')
         'https://github.com/yavdr/yavdr-base/raw/stable-0.5/etc/vdr/plugins/iptv/vlcinput/zdf_kultur-iptv.conf'
         "50-$_plugname.conf")
 backup=("etc/vdr/conf.avail/50-$_plugname.conf")
