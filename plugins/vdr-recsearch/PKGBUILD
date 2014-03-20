@@ -2,7 +2,7 @@
 pkgname=vdr-recsearch
 pkgver=0.2.2
 _vdrapi=2.1.6
-pkgrel=3
+pkgrel=4
 pkgdesc="Search your recordings and find the one you are looking for"
 url="https://github.com/flensrocker/vdr-plugin-recsearch"
 arch=('x86_64' 'i686')
