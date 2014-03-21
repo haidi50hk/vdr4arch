@@ -14,7 +14,20 @@ optdepends=('lirc-utils: remote control support'
 replaces=('runvdr-extreme')
 conflicts=('runvdr-extreme')
 provides=("vdr-api=2.1.6")
-backup=('var/lib/vdr/channels.conf'
+backup=('etc/vdr/conf.avail/50-dvbsddevice.conf'
+        'etc/vdr/conf.avail/50-dvbhddevice.conf'
+        'etc/vdr/conf.avail/50-epgtableid0.conf'
+        'etc/vdr/conf.avail/50-hello.conf'
+        'etc/vdr/conf.avail/50-osddemo.conf'
+        'etc/vdr/conf.avail/50-pictures.conf'
+        'etc/vdr/conf.avail/50-rcu.conf'
+        'etc/vdr/conf.avail/50-skincurses.conf'
+        'etc/vdr/conf.avail/50-status.conf'
+        'etc/vdr/conf.avail/50-svccli.conf'
+        'etc/vdr/conf.avail/50-svcsvr.conf'
+        'etc/vdr/conf.avail/50-svdrpdemo.conf'
+        'etc/vdr/conf.d/10-vdr.conf'
+        'var/lib/vdr/channels.conf'
         'var/lib/vdr/diseqc.conf'
         'var/lib/vdr/keymacros.conf'
         'var/lib/vdr/scr.conf'
@@ -24,7 +37,7 @@ options='!emptydirs'
 install='vdr.install'
 source=("ftp://ftp.tvdr.de/vdr/Developer/${pkgname}-${pkgver}.tar.bz2"
         'MainMenuHooks-v1_0_2.diff::http://www.vdr-portal.de/index.php?page=Attachment&attachmentID=30330'
-        'vdr-2.1.6-conf.d-v4.diff::http://www.vdr-portal.de/index.php?page=Attachment&attachmentID=35767'
+        'vdr-2.1.6-conf.d-v5.diff::http://www.vdr-portal.de/index.php?page=Attachment&attachmentID=35781'
         '10-vdr.conf'
         '50-dvbsddevice.conf'
         '50-hello.conf'
@@ -38,8 +51,8 @@ source=("ftp://ftp.tvdr.de/vdr/Developer/${pkgname}-${pkgver}.tar.bz2"
         'vdr.service')
 md5sums=('79519dac59166fabc2029b916bd61d00'
          '301c9b9766ed5182b07f1debc79abc21'
-         '0fc319d8047fa0233bba6eb4cda88c13'
-         'e277548e8363569c8b9d30333209196f'
+         'ca3eec417c96ce197481a17244313ca6'
+         '7ecfc558ef948544f0d27df0154d2bc3'
          '9cb821ebb6a25e603f9c32bafabde362'
          'fc450f75037b8712673db4969a1dd758'
          'f00583e3f5507b0ff935b4d5919e7df2'
@@ -64,7 +77,7 @@ prepare() {
 
   sed -i 's/NULL, 0, true/NULL, 0, OpenSubMenus/g' "$srcdir/MainMenuHooks-v1_0_2.diff"
   patch -p1 -i "$srcdir/MainMenuHooks-v1_0_2.diff"
-  patch -p1 -i "$srcdir/vdr-2.1.6-conf.d-v4.diff"
+  patch -p1 -i "$srcdir/vdr-2.1.6-conf.d-v5.diff"
 
   sed -i '/define DEPRECATED_VIDEOSYSTEM/d' device.h
 }
@@ -77,6 +90,11 @@ build() {
 }
 
 package() {
+  install -Dm644 10-vdr.conf "$pkgdir/etc/vdr/conf.d/10-vdr.conf"
+  install -Dm644 50-dvbsddevice.conf "$pkgdir/etc/vdr/conf.avail/50-dvbsddevice.conf"
+  install -Dm644 50-hello.conf "$pkgdir/etc/vdr/conf.avail/50-hello.conf"
+  install -Dm644 50-pictures.conf "$pkgdir/etc/vdr/conf.avail/50-pictures.conf"
+  install -Dm644 50-rcu.conf "$pkgdir/etc/vdr/conf.avail/50-rcu.conf"
   install -Dm644 60-create-dvb-device-units.rules "$pkgdir/usr/lib/udev/rules.d/60-create-dvb-device-units.rules"
   install -Dm644 60-vdr-tty.rules "$pkgdir/usr/lib/udev/rules.d/60-vdr-tty.rules"
   install -Dm644 vdr.service "$pkgdir/usr/lib/systemd/system/vdr.service"
@@ -84,28 +102,16 @@ package() {
   install -Dm755 gen-sddropin "$pkgdir/usr/lib/vdr/bin/gen-sddropin"
   install -Dm755 shutdown.sh "$pkgdir/usr/lib/vdr/bin/shutdown.sh"
 
-  # Makefile doesn't create the config directory
-  mkdir -p "$pkgdir/var/lib/vdr"
-
-  cd "${srcdir}/${pkgname}-${pkgver}"
-  mkdir -p "$pkgdir/var/lib/vdr"
-  make DESTDIR="${pkgdir}" install
-
-  mkdir -p "$pkgdir/etc/vdr/conf.avail"
-  install -Dm644 "$srcdir/10-vdr.conf" "$pkgdir/etc/vdr/conf.avail/10-vdr.conf"
-  install -Dm644 "$srcdir/50-dvbsddevice.conf" "$pkgdir/etc/vdr/conf.avail/50-dvbsddevice.conf"
   echo "[dvbhddevice]" > "$pkgdir/etc/vdr/conf.avail/50-dvbhddevice.conf"
   echo "[epgtableid0]" > "$pkgdir/etc/vdr/conf.avail/50-epgtableid0.conf"
-  install -Dm644 "$srcdir/50-hello.conf" "$pkgdir/etc/vdr/conf.avail/50-hello.conf"
   echo "[osddemo]" > "$pkgdir/etc/vdr/conf.avail/50-osddemo.conf"
-  install -Dm644 "$srcdir/50-pictures.conf" "$pkgdir/etc/vdr/conf.avail/50-pictures.conf"
-  install -Dm644 "$srcdir/50-rcu.conf" "$pkgdir/etc/vdr/conf.avail/50-rcu.conf"
   echo "[skincurses]" > "$pkgdir/etc/vdr/conf.avail/50-skincurses.conf"
   echo "[status]" > "$pkgdir/etc/vdr/conf.avail/50-status.conf"
   echo "[svccli]" > "$pkgdir/etc/vdr/conf.avail/50-svccli.conf"
   echo "[svcsvr]" > "$pkgdir/etc/vdr/conf.avail/50-svcsvr.conf"
   echo "[svdrpdemo]" > "$pkgdir/etc/vdr/conf.avail/50-svdrpdemo.conf"
 
-  mkdir -p "$pkgdir/etc/vdr/conf.d"
-  ln -sr "$pkgdir/etc/vdr/conf.avail/10-vdr.conf" "$pkgdir/etc/vdr/conf.d/10-vdr.conf"
+  cd "${srcdir}/${pkgname}-${pkgver}"
+  mkdir -p "$pkgdir/var/lib/vdr"
+  make DESTDIR="${pkgdir}" install
 }
