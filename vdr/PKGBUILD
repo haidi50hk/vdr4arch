@@ -22,10 +22,12 @@ options='!emptydirs'
 install='vdr.install'
 source=("ftp://ftp.tvdr.de/vdr/Developer/${pkgname}-${pkgver}.tar.bz2"
         'MainMenuHooks-v1_0_2.diff::http://www.vdr-portal.de/index.php?page=Attachment&attachmentID=30330'
+        'vdr-loglevel-fix.diff::http://www.vdr-portal.de/index.php?page=Attachment&attachmentID=33745'
         'shutdown.sh'
         'shutdown-wrapper.c')
 md5sums=('79519dac59166fabc2029b916bd61d00'
          '301c9b9766ed5182b07f1debc79abc21'
+         '6877c9efd84261c4a0471e657edce52d'
          'fb1f52d7decba2df9c5d00c70040984a'
          '7cad811b4ac5ee6c0b5496d006f1e0ee')
 
