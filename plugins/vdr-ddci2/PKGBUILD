@@ -1,0 +1,43 @@
+pkgname=vdr-ddci2
+pkgver=0.0.12
+_gitver=1bef28d5233feee9fa26e84fbd6339c10ad13ae6
+_vdrapi=2.1.6
+pkgrel=1
+pkgdesc="Output device that does nothing"
+url="http://phivdr.dyndns.org/vdr/vdr-dummydevice/"
+arch=('x86_64' 'i686')
+license=('GPL2')
+depends=('gcc-libs' "vdr-api=${_vdrapi}")
+makedepends=('git')
+_plugname=$(echo $pkgname | sed 's/vdr-//g')
+source=("git+https://github.com/jasmin-j/vdr-plugin-ddci2.git#commit=$_gitver"
+        'ddci2-remove_readchunk.diff'
+        "50-$_plugname.conf")
+backup=("etc/vdr/conf.avail/50-$_plugname.conf")
+md5sums=('SKIP'
+         'aeda654017a3e7d875f5d50ffc87b732'
+         '5dc8a287efe1419aaf1162cb6a6f28f3')
+
+pkgver() {
+  cd "${srcdir}/vdr-plugin-$_plugname"
+  git tag -a v0.0.12 -m 'Added Tag' 1bef28d5233feee9fa26e84fbd6339c10ad13ae6 2> /dev/null
+  git describe --tags | sed -r 's/([^-]*-g)/r\1/;s/-/./g;s/^v//'
+}
+
+prepare() {
+  cd "${srcdir}/vdr-plugin-$_plugname"
+  patch -p1 -i "$srcdir/ddci2-remove_readchunk.diff"
+}
+
+build() {
+  cd "${srcdir}/vdr-plugin-$_plugname"
+  make
+}
+
+package() {
+  cd "${srcdir}/vdr-plugin-$_plugname"
+  make DESTDIR="${pkgdir}" install
+
+  mkdir -p "$pkgdir/etc/vdr/conf.avail"
+  install -Dm644 "$srcdir/50-$_plugname.conf" "$pkgdir/etc/vdr/conf.avail/50-$_plugname.conf"
+}

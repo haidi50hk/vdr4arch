@@ -1,0 +1,115 @@
+diff --git a/ddcireadbuf.cpp b/ddcireadbuf.cpp
+index f198209..57e6fe8 100644
+--- a/ddcireadbuf.cpp
++++ b/ddcireadbuf.cpp
+@@ -31,18 +31,6 @@
+ 
+ //------------------------------------------------------------------------
+ 
+-int inline DdCiReadBuf::ReadBlock( int FileHandle, uchar *Data, int Size )
+-{
+-	Size -= Size % margin;   // we read in junks of margin
+-	int Count = safe_read( FileHandle, Data, Size );
+-	if ((Count > 0) && (Count % margin))
+-		L_ERR( "Couldn't read a complete junk, got only %d bytes", Count );
+-
+-	return Count;
+-}
+-
+-//------------------------------------------------------------------------
+-
+ DdCiReadBuf::DdCiReadBuf()
+ : cRingBufferLinear( BUF_SIZE, BUF_MARGIN, STAT_DDCIREADBUF, "DDCI CAM Recv" )
+ {
+@@ -57,59 +45,3 @@ DdCiReadBuf::~DdCiReadBuf()
+ 	LOG_FUNCTION_ENTER;
+ 	LOG_FUNCTION_EXIT;
+ }
+-
+-//------------------------------------------------------------------------
+-
+-int DdCiReadBuf::ReadChunk( int FileHandle, int Max )
+-{
+-	int Tail = tail;
+-	int rest = Size() - head;
+-	int diff = Tail - head;
+-	int free = ((Tail < margin) ? rest : (diff > 0) ? diff : Size() + diff - margin) - 1;
+-	if ((0 < Max) && (Max < free))
+-		free = Max;
+-	free -= free % margin;   // we read in junks of margin
+-	int Count = -1;
+-	errno = EAGAIN;
+-	if (free > 0) {
+-		if (rest <= margin) {
+-			static const int TEMP_MAX = 20 * TS_SIZE;
+-			int szTemp = free < TEMP_MAX ? free : TEMP_MAX;
+-			szTemp -= szTemp % margin;
+-			uchar temp[ szTemp ];
+-			Count = ReadBlock( FileHandle, temp, szTemp );
+-			if (Count > 0) {
+-				memcpy( buffer + head, temp, rest );
+-				int part = Count - rest;
+-				if (part)
+-					memcpy( buffer + margin, temp + rest, part );
+-				head = margin + part;
+-			}
+-		} else {
+-			int size = (diff > 0) ? diff - 1 : rest;
+-			if (Tail <= margin)
+-				size--;
+-			Count = ReadBlock( FileHandle, buffer + head, size );
+-			if (Count > 0)
+-				head += Count;
+-		}
+-		if (Count > 0) {
+-			if (statistics) {
+-				int fill = head - Tail;
+-				if (fill < 0)
+-					fill = Size() + fill;
+-				else if (fill >= Size())
+-					fill = Size() - 1;
+-				UpdatePercentage( fill );
+-			}
+-		}
+-	}
+-#ifdef DEBUGRINGBUFFERS
+-	lastHead = head;
+-	lastPut = Count;
+-#endif
+-	EnableGet();
+-	if (free == 0)
+-		WaitForPut();
+-	return Count;
+-}
+diff --git a/ddcireadbuf.h b/ddcireadbuf.h
+index 1e54e76..7c4dbd8 100644
+--- a/ddcireadbuf.h
++++ b/ddcireadbuf.h
+@@ -52,13 +52,6 @@ public:
+ 
+ 	/// Destructor.
+ 	virtual ~DdCiReadBuf();
+-
+-	int ReadChunk( int FileHandle, int Max = 0 );
+-    ///< Reads at most Max bytes in chunks of margin from FileHandle and stores
+-    ///< them in the ring buffer. If Max is 0, reads as many bytes as possible
+-	///< in chunks of margin. Only one actual read() call is done.
+-	///< Returns the number of bytes actually read and stored, or
+-	///< an error value from the actual read() call.
+ };
+ 
+ #endif //__DDCIREADBUF_H
+diff --git a/ddcitsrecv.cpp b/ddcitsrecv.cpp
+index ab03e6f..95ad747 100644
+--- a/ddcitsrecv.cpp
++++ b/ddcitsrecv.cpp
+@@ -182,8 +182,7 @@ void DdCiTsRecv::Action()
+ 		if (Poller.Poll( RUN_TMO )) {
+ 			errno = 0;
+ 			mtxClear.Lock();
+-			int r = rb.ReadChunk( fd );
+-			// int r = rb.Read( fd );
++			int r = rb.Read( fd );
+ 			mtxClear.Unlock();
+ 			if ((r < 0) && FATALERRNO) {
+ 				if (errno == EOVERFLOW)
