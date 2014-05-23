@@ -1,10 +1,10 @@
 # Maintainer: Christopher Reimer <vdr4arch[at]creimer[dot]net>
 pkgname=vdr-dvbapi
-pkgver=2.1.0
+pkgver=2.1.0_7_gbdcad3f
 epoch=1
-_gitver=437ed964bcbeb3c81d7b2d3cc28ace060e87a530
+_gitver=bdcad3fe170ebaa89a49dc9aa52160e843bd9dfe
 _vdrapi=2.1.6
-pkgrel=2
+pkgrel=1
 pkgdesc="A bridge between VDR and OScam."
 url="https://github.com/manio/vdr-plugin-dvbapi"
 arch=('x86_64' 'i686')
@@ -12,20 +12,13 @@ license=('GPL2')
 depends=('libdvbcsa' 'oscam' "vdr-api=${_vdrapi}")
 makedepends=('git')
 _plugname=$(echo $pkgname | sed 's/vdr-//g')
-source=("git://github.com/manio/vdr-plugin-dvbapi.git#commit=$_gitver"
-        'Fix-SetupParse.diff::https://github.com/manio/vdr-plugin-dvbapi/commit/6ee9d6.diff')
+source=("git://github.com/manio/vdr-plugin-dvbapi.git#commit=$_gitver")
 backup=("etc/vdr/conf.avail/50-$_plugname.conf")
-sha256sums=('SKIP'
-            'da26934805419d891b6afd33768c98153cd55cabdb7cb1ee336177eac67156fc')
+sha256sums=('SKIP')
 
 pkgver() {
   cd "${srcdir}/vdr-plugin-${_plugname}"
   git describe --tags | sed 's/-/_/g;s/v//'
-}
-
-prepare() {
-  cd "${srcdir}/vdr-plugin-${_plugname}"
-  patch -p1 -i "$srcdir/Fix-SetupParse.diff"
 }
 
 build() {
