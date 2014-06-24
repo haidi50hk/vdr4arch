@@ -7,7 +7,7 @@ _vdrapi=2.1.6
 pkgrel=2
 pkgdesc="automatic advertisement detection"
 url="http://projects.vdr-developer.org/projects/plg-markad"
-arch=('x86_64' 'i686' 'armv6h')
+arch=('x86_64' 'i686' 'arm' 'armv6h' 'armv7h')
 license=('GPL2')
 depends=('ffmpeg' "vdr-api=${_vdrapi}")
 makedepends=('git')
